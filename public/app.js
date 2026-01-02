@@ -264,7 +264,7 @@ function renderMessages() {
     chatMessages.innerHTML = `
         <div class="message bot-message">
             <div class="message-content">
-                <p>Hello! I'm F3 Dev Assist. I can help you create SuiteScripts, Suitelets, RESTlets, and more. What would you like to build today?</p>
+                <p>Hello! I'm NetSuite Dev Assist. I can help you create SuiteScripts, Suitelets, RESTlets, and more. What would you like to build today?</p>
             </div>
         </div>
     `;

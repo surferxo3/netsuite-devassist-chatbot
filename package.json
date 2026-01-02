@@ -1,7 +1,7 @@
 {
-  "name": "f3-suitecloud-devassist",
+  "name": "netsuite-devassist-chatbot",
   "version": "1.0.0",
-  "description": "F3 SuiteScript Dev Assist Chatbot - NetSuite DevAssist API PoC",
+  "description": "NetSuite DevAssist Chatbot - AI-powered code generation using NetSuite's DevAssist API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -12,13 +12,13 @@
     "suitescript",
     "devassist",
     "chatbot",
-    "folio3",
     "oracle",
-    "cohere"
+    "cohere",
+    "ai",
+    "code-generation"
   ],
-  "author": "Folio3 Software",
-  "license": "UNLICENSED",
-  "private": true,
+  "author": "surferxo3",
+  "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
   },

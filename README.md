@@ -1,10 +1,10 @@
-# F3 SuiteScript Dev Assist Chatbot
+# NetSuite DevAssist Chatbot
 
 A proof-of-concept chatbot that interfaces with NetSuite's DevAssist API, powered by Oracle OCI Cohere Command R model. This chatbot provides code assistance for NetSuite development with proper formatting, code blocks, and copy functionality.
 
-![F3 Dev Assist](https://img.shields.io/badge/F3-Dev%20Assist-purple)
-![NetSuite](https://img.shields.io/badge/NetSuite-SuiteScript-blue)
+![NetSuite](https://img.shields.io/badge/NetSuite-DevAssist-blue)
 ![Node.js](https://img.shields.io/badge/Node.js-18+-green)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
 ---
 
@@ -38,7 +38,7 @@ A proof-of-concept chatbot that interfaces with NetSuite's DevAssist API, powere
 
 | Field | Value |
 |-------|-------|
-| **Name** | `F3 SuiteScript Dev Assist` |
+| **Name** | `NetSuite DevAssist Chatbot` |
 | **State** | `Enabled` |
 
 4. Under **OAuth 2.0** section, configure:
@@ -62,7 +62,7 @@ A proof-of-concept chatbot that interfaces with NetSuite's DevAssist API, powere
 
 7. **⚠️ IMPORTANT**: Copy the **Consumer Key / Client ID** shown on the confirmation page. You will only see this once!
 
-   Example: `b2a08923443c7a763c2ecd27f08d5403a53cec043f9b70c2d5e25944114b3e03`
+   Example: `a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2`
 
 ---
 
@@ -70,8 +70,8 @@ A proof-of-concept chatbot that interfaces with NetSuite's DevAssist API, powere
 
 ```bash
 # Clone the repository
-git clone https://bitbucket.org/folio3/f3-suitecloud-devassist.git
-cd f3-suitecloud-devassist
+git clone https://github.com/surferxo3/netsuite-devassist-chatbot.git
+cd netsuite-devassist-chatbot
 
 # Install dependencies
 npm install
@@ -90,9 +90,6 @@ cp .env.example .env
 Edit the `.env` file with your settings:
 
 ```env
-# NetSuite Account ID (e.g., 4073908-sb4 for sandbox, 4073908 for production)
-NETSUITE_ACCOUNT_ID=<ACCOUNT_ID>
-
 # NetSuite DevAssist API URL (your account-specific URL)
 NETSUITE_API_URL=https://<ACCOUNT_ID>.app.netsuite.com:443/api/internal/devassist/chat/completions
 
@@ -106,7 +103,7 @@ NETSUITE_DISCOVERY_URL=https://<ACCOUNT_ID>.suitetalk.api.netsuite.com/.well-kno
 PORT=3000
 ```
 
-**Replace `<ACCOUNT_ID>`** with your NetSuite account ID (e.g., `4073908_SB4` for sandbox or `4073908` for production).
+**Replace `<ACCOUNT_ID>`** with your NetSuite account ID (e.g., `1234567_SB1` for sandbox or `1234567` for production).
 
 **Replace `<YOUR_CONSUMER_KEY_FROM_STEP_1>`** with the Consumer Key you copied from Step 1.
 
@@ -172,29 +169,31 @@ Click **"Logout"** in the header to end your session.
 
 ## Naming Conventions
 
-All generated code follows Folio3 naming conventions:
+The generated code follows a configurable naming convention. You can customize the prefix in `system-prompt.md`:
 
 | Type | Format | Example |
 |------|--------|---------|
-| Suitelet | `customscript_f3_<name>_sl` | `customscript_f3_open_so_sl` |
-| User Event | `customscript_f3_<name>_ue` | `customscript_f3_validate_cust_ue` |
-| Client Script | `customscript_f3_<name>_cs` | `customscript_f3_field_val_cs` |
-| Map/Reduce | `customscript_f3_<name>_mr` | `customscript_f3_process_inv_mr` |
-| Scheduled | `customscript_f3_<name>_ss` | `customscript_f3_daily_sync_ss` |
-| RESTlet | `customscript_f3_<name>_rl` | `customscript_f3_api_orders_rl` |
+| Suitelet | `customscript_<prefix>_<name>_sl` | `customscript_myco_open_so_sl` |
+| User Event | `customscript_<prefix>_<name>_ue` | `customscript_myco_validate_cust_ue` |
+| Client Script | `customscript_<prefix>_<name>_cs` | `customscript_myco_field_val_cs` |
+| Map/Reduce | `customscript_<prefix>_<name>_mr` | `customscript_myco_process_inv_mr` |
+| Scheduled | `customscript_<prefix>_<name>_ss` | `customscript_myco_daily_sync_ss` |
+| RESTlet | `customscript_<prefix>_<name>_rl` | `customscript_myco_api_orders_rl` |
+
+**To customize**: Edit `system-prompt.md` and replace `_ns_` with your company prefix (e.g., `_myco_`).
 
 ---
 
 ## Project Structure
 
 ```
-f3-suitecloud-devassist/
+netsuite-devassist-chatbot/
 ├── .env                    # Environment configuration (not committed)
 ├── .env.example            # Example environment file (template)
 ├── .gitignore              # Git ignore rules
 ├── package.json            # Node.js dependencies
 ├── server.js               # Express backend with OAuth 2.0
-├── system-prompt.md        # AI system prompt configuration
+├── system-prompt.md        # AI system prompt configuration (customizable)
 ├── README.md               # This file
 └── public/
     ├── index.html          # Chat UI
@@ -222,7 +221,7 @@ f3-suitecloud-devassist/
 
 ### Code Not Following Naming Conventions
 - The AI model suggestions may vary; copy and rename files as needed
-- Reference the naming conventions table above
+- Customize `system-prompt.md` for your preferred naming convention
 
 ---
 
@@ -241,66 +240,6 @@ f3-suitecloud-devassist/
 |----------|--------|-------------|
 | `/api/chat` | POST | Send chat message |
 | `/api/health` | GET | Health check |
-
-### NetSuite REST API Proxy (for debugging)
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/metadata/:recordType` | GET | Get record field schema |
-| `/api/record/:recordType/:id` | GET | Get a specific record |
-| `/api/suiteql` | POST | Execute SuiteQL query |
-
----
-
-## Testing API Endpoints in Postman
-
-After authenticating in the browser, you can test the proxy endpoints in Postman:
-
-### Get Record Metadata
-```
-GET http://localhost:3000/api/metadata/salesorder
-```
-Returns the field schema for Sales Orders - useful to know which fields exist.
-
-### Get Record Metadata (Direct to NetSuite)
-```
-GET https://<ACCOUNT_ID>.suitetalk.api.netsuite.com/services/rest/record/v1/metadata-catalog/salesorder
-Authorization: Bearer <YOUR_ACCESS_TOKEN>
-Accept: application/schema+json
-```
-
-### Execute SuiteQL Query
-```
-POST http://localhost:3000/api/suiteql
-Content-Type: application/json
-
-{
-  "query": "SELECT id, tranid, trandate FROM transaction WHERE type = 'SalesOrd' AND ROWNUM <= 10"
-}
-```
-
-### Execute SuiteQL (Direct to NetSuite)
-```
-POST https://<ACCOUNT_ID>.suitetalk.api.netsuite.com/services/rest/query/v1/suiteql
-Authorization: Bearer <YOUR_ACCESS_TOKEN>
-Content-Type: application/json
-Prefer: transient
-
-{
-  "q": "SELECT id, tranid FROM transaction WHERE ROWNUM <= 5"
-}
-```
-
-### Get Single Record
-```
-GET http://localhost:3000/api/record/salesorder/12345
-```
-
-### Get Record (Direct to NetSuite)
-```
-GET https://<ACCOUNT_ID>.suitetalk.api.netsuite.com/services/rest/record/v1/salesorder/12345
-Authorization: Bearer <YOUR_ACCESS_TOKEN>
-Accept: application/json
-```
 
 ---
 
@@ -324,23 +263,6 @@ This PoC uses browser storage for simplicity:
 | **Active Chat** | `sessionStorage` | Tab session | Lost on tab close |
 | **Auth Tokens** | Server memory | Server session | Lost on server restart |
 
-### Optional: Auto-Inject Metadata
-
-The server includes an optional feature to automatically fetch NetSuite field metadata and inject it into the LLM context. This helps the LLM generate correct field names in SuiteQL queries.
-
-**To enable** (in `server.js`):
-```javascript
-const AUTO_INJECT_METADATA = true; // Change from false to true
-```
-
-When enabled, if you ask about "sales orders", the server will:
-1. Detect the record type
-2. Fetch metadata from NetSuite REST API
-3. Inject available field names into your message
-4. LLM uses correct field names!
-
-**Note**: This is disabled by default because the NetSuite-trained Cohere LLM should already know standard fields.
-
 ### Future Enhancements
 
 For production, consider:
@@ -361,12 +283,22 @@ For production, consider:
 
 ---
 
-## License
+## Contributing
 
-Internal use only - Folio3 Software
+Contributions are welcome! Feel free to:
+- Open issues for bugs or feature requests
+- Submit pull requests
+- Improve documentation
 
 ---
 
-## Support
+## License
 
-For issues or questions, contact the Folio3 NetSuite development team.
+MIT License - See [LICENSE](LICENSE) file for details.
+
+---
+
+## Acknowledgments
+
+- [NetSuite DevAssist API](https://www.netsuite.com/) - AI-powered code generation
+- [Oracle OCI Cohere](https://cohere.com/) - LLM powering the responses

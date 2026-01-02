@@ -21,7 +21,7 @@ try {
   console.log(`✓ Loaded system prompt from: ${PROMPT_FILE_PATH}`);
 } catch (error) {
   console.warn(`⚠ Could not load prompt file, using default:`, error.message);
-  SYSTEM_PROMPT = process.env.DEFAULT_SYSTEM_PROMPT || 'You are F3 Dev Assist, a highly skilled software engineer with extensive knowledge in NetSuite, SuiteScript, SuiteQL, and modern web development.';
+  SYSTEM_PROMPT = process.env.DEFAULT_SYSTEM_PROMPT || 'You are NetSuite Dev Assist, a highly skilled software engineer with extensive knowledge in NetSuite, SuiteScript, SuiteQL, and modern web development.';
 }
 
 // =============================================================================
@@ -65,8 +65,7 @@ function validateEnv() {
   const required = [
     'NETSUITE_API_URL',
     'NETSUITE_CLIENT_ID',
-    'NETSUITE_DISCOVERY_URL',
-    'NETSUITE_ACCOUNT_ID'
+    'NETSUITE_DISCOVERY_URL'
   ];
   
   const missing = required.filter(key => !process.env[key]);
@@ -323,141 +322,6 @@ app.post('/auth/logout', async (req, res) => {
   
   res.json({ success: true, message: 'Logged out successfully' });
 });
-
-// =============================================================================
-// METADATA ENDPOINT - Get NetSuite record field information
-// =============================================================================
-app.get('/api/metadata/:recordType', async (req, res) => {
-  try {
-    if (!isAuthenticated()) {
-      return res.status(401).json({ error: 'Not authenticated' });
-    }
-
-    const { recordType } = req.params;
-    const accessToken = await getValidAccessToken();
-    
-    // NetSuite SuiteTalk REST API for metadata
-    // Format: https://{ACCOUNT_ID}.suitetalk.api.netsuite.com/services/rest/record/v1/metadata-catalog/{recordType}
-    const accountId = process.env.NETSUITE_ACCOUNT_ID;
-    const metadataUrl = `https://${accountId}.suitetalk.api.netsuite.com/services/rest/record/v1/metadata-catalog/${recordType}`;
-    
-    console.log(`📋 Fetching metadata for: ${recordType}`);
-    console.log(`   URL: ${metadataUrl}`);
-    
-    const response = await axios.get(metadataUrl, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Accept': 'application/schema+json'  // Required for metadata schema
-      },
-      timeout: 30000
-    });
-    
-    console.log(`✓ Metadata fetched for ${recordType}`);
-    res.json(response.data);
-    
-  } catch (error) {
-    console.error('Metadata error:', error.response?.data || error.message);
-    res.status(error.response?.status || 500).json({
-      error: 'Failed to fetch metadata',
-      message: error.response?.data?.title || error.message,
-      recordType: req.params.recordType
-    });
-  }
-});
-
-// Get record by ID
-app.get('/api/record/:recordType/:id', async (req, res) => {
-  try {
-    if (!isAuthenticated()) {
-      return res.status(401).json({ error: 'Not authenticated' });
-    }
-
-    const { recordType, id } = req.params;
-    const accessToken = await getValidAccessToken();
-    
-    // Format: https://{ACCOUNT_ID}.suitetalk.api.netsuite.com/services/rest/record/v1/{recordType}/{id}
-    const accountId = process.env.NETSUITE_ACCOUNT_ID;
-    const recordUrl = `https://${accountId}.suitetalk.api.netsuite.com/services/rest/record/v1/${recordType}/${id}`;
-    
-    console.log(`📄 Fetching record: ${recordType}/${id}`);
-    
-    const response = await axios.get(recordUrl, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Accept': 'application/json'
-      },
-      timeout: 30000
-    });
-    
-    console.log(`✓ Record fetched: ${recordType}/${id}`);
-    res.json(response.data);
-    
-  } catch (error) {
-    console.error('Record fetch error:', error.response?.data || error.message);
-    res.status(error.response?.status || 500).json({
-      error: 'Failed to fetch record',
-      message: error.response?.data?.title || error.message
-    });
-  }
-});
-
-// =============================================================================
-// SUITEQL ENDPOINT - Run ad-hoc SuiteQL queries
-// =============================================================================
-app.post('/api/suiteql', async (req, res) => {
-  try {
-    if (!isAuthenticated()) {
-      return res.status(401).json({ error: 'Not authenticated' });
-    }
-
-    const { query, limit } = req.body;
-    if (!query) {
-      return res.status(400).json({ error: 'Query is required' });
-    }
-
-    const accessToken = await getValidAccessToken();
-    
-    // Format: https://{ACCOUNT_ID}.suitetalk.api.netsuite.com/services/rest/query/v1/suiteql
-    const accountId = process.env.NETSUITE_ACCOUNT_ID;
-    const suiteqlUrl = `https://${accountId}.suitetalk.api.netsuite.com/services/rest/query/v1/suiteql`;
-    
-    console.log(`🔍 Running SuiteQL: ${query.substring(0, 100)}...`);
-    
-    const response = await axios.post(suiteqlUrl, 
-      { q: query },
-      {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'transient'  // Don't cache query results on NetSuite side
-        },
-        params: limit ? { limit } : {},
-        timeout: 60000
-      }
-    );
-    
-    console.log(`✓ SuiteQL returned ${response.data?.items?.length || 0} rows`);
-    res.json(response.data);
-    
-  } catch (error) {
-    console.error('SuiteQL error:', error.response?.data || error.message);
-    res.status(error.response?.status || 500).json({
-      error: 'SuiteQL failed',
-      message: error.response?.data?.title || error.message,
-      details: error.response?.data
-    });
-  }
-});
-
-// =============================================================================
-// FUTURE: Dynamic SuiteQL Schema Discovery
-// =============================================================================
-// To implement dynamic schema discovery, you could:
-// 1. Query: SELECT * FROM {table} WHERE ROWNUM <= 1
-// 2. Parse column names from response
-// 3. Cache results for performance
-// 
-// For now, relying on LLM's built-in NetSuite knowledge.
 
 // =============================================================================
 // CHAT ENDPOINT
