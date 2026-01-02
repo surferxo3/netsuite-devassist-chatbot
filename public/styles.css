@@ -426,8 +426,14 @@ header {
 
 .message-content li {
     margin: 2px 0;
-    line-height: 1.6;
+    line-height: 1.5;
     padding-left: 4px;
+}
+
+/* Remove extra spacing from p tags inside list items */
+.message-content li p {
+    margin: 0;
+    line-height: inherit;
 }
 
 /* Nested lists (sub-bullets) - inside li */
