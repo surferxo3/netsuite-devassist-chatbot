@@ -16,7 +16,8 @@ A proof-of-concept chatbot that interfaces with NetSuite's DevAssist API, powere
 - 📝 **Markdown Rendering** - Properly formatted code blocks, headers, lists
 - 📋 **One-Click Copy** - Copy code snippets with a single click
 - 🎨 **Modern UI** - Clean, responsive design with dark code themes
-- 📜 **Conversation History** - Context-aware responses (last 30 exchanges)
+- 📜 **Multiple Chat Sessions** - Create, switch, and manage separate conversations
+- 💾 **Persistent History** - Chats saved in browser localStorage across sessions
 
 ---
 
@@ -159,8 +160,14 @@ Type your NetSuite development questions in the chat:
 ### Copy Code
 Click the **Copy** button on any code block to copy to clipboard.
 
-### Clear Conversation
-Click **"Clear Conversation"** to start fresh.
+### Multiple Chat Sessions
+- Click **"New Chat"** in the sidebar to start a fresh conversation
+- Switch between chats by clicking on them in the sidebar
+- Each chat maintains its own conversation history
+- Delete individual chats using the 🗑️ button
+
+### Clear All History
+Click **"Clear All History"** in the sidebar to delete all saved chats.
 
 ### Logout
 Click **"Logout"** in the header to end your session.
@@ -191,6 +198,7 @@ netsuite-devassist-chatbot/
 ├── .env                    # Environment configuration (not committed)
 ├── .env.example            # Example environment file (template)
 ├── .gitignore              # Git ignore rules
+├── LICENSE                 # MIT License
 ├── package.json            # Node.js dependencies
 ├── server.js               # Express backend with OAuth 2.0
 ├── system-prompt.md        # AI system prompt configuration (customizable)
