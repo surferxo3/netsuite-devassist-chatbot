@@ -417,7 +417,7 @@ header {
 .message-content ul,
 .message-content ol {
     margin: 4px 0 6px 0;
-    padding-left: 20px;
+    padding-left: 24px;
     list-style-position: outside;
 }
 
@@ -425,20 +425,29 @@ header {
 .message-content ol { list-style-type: decimal; }
 
 .message-content li {
-    margin: 1px 0;
-    line-height: 1.5;
-    padding-left: 2px;
+    margin: 2px 0;
+    line-height: 1.6;
+    padding-left: 4px;
 }
 
-/* Nested lists (sub-bullets) */
+/* Nested lists (sub-bullets) - inside li */
 .message-content li > ul,
 .message-content li > ol {
-    margin: 2px 0;
-    padding-left: 16px;
+    margin: 4px 0 4px 0;
+    padding-left: 20px;
+}
+
+/* UL following OL (LLM often outputs this way) - indent visually */
+.message-content ol + ul {
+    margin-top: 2px;
+    padding-left: 44px;
 }
 
 /* Second level bullets - circles */
-.message-content ul ul { list-style-type: circle; }
+.message-content ul ul,
+.message-content ol + ul { 
+    list-style-type: circle; 
+}
 .message-content ol ol { list-style-type: lower-alpha; }
 
 /* Third level bullets - squares */
@@ -447,7 +456,7 @@ header {
 
 /* Nested list items */
 .message-content li li {
-    margin: 1px 0;
+    margin: 2px 0;
 }
 
 /* Bold and italic */
