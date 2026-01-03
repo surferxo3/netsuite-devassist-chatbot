@@ -308,5 +308,5 @@ MIT License - See [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
-- [NetSuite DevAssist API](https://www.netsuite.com/) - AI-powered code generation
-- [Oracle OCI Cohere](https://cohere.com/) - LLM powering the responses
+- [Folio3 NetSuite Services](https://netsuite.folio3.com/) - Award-winning NetSuite Alliance Partner
+- [Oracle OCI Cohere](https://docs.cohere.com/docs/oracle-cloud-infrastructure-oci) - LLM powering the responses
